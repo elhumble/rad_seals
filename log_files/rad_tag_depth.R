@@ -1,8 +1,9 @@
 # read process_radtag log files and determine depth of coverage per individual
 
-require(dplyr)
+library(dplyr)
 
-# change path accordingly
+# place log files into main directory
+
 temp_logs <-list.files(pattern="*.log")
 
 log2csv <- function(file){
@@ -32,8 +33,10 @@ log <- do.call(rbind, lapply(temp_csvs, read.log)) %>%
   group_by(pool) %>%
   mutate(pool.fraction = Total / sum(Total), cov.per.tag = Retained/80000)
 
-pdf("output/tag_coverage_Mar2016.pdf")
+system(paste0("rm temp/*"))
+
+pdf("output/tag_coverage_June2016.pdf") # rename accordingly
 hist(log$cov.per.tag, breaks = 40)
 dev.off() 
 
-write.table(log2, "output/process_radtags_summary_June2016.txt", quote = F, row.names = F)
+write.table(log2, "output/process_radtags_summary_June2016.txt", quote = F, row.names = F) # rename accordingly
